@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
@@ -21,21 +22,43 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
+import app.com.lsl.imagesend.Task.RegisterTask;
+
 public class MainActivity extends AppCompatActivity {
 
     private Button but0,but1;
     public static ImageView iv;
     private TextView tv;
+    private Button but_register;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
         but0 = (Button) findViewById(R.id.but_send);
         but1 = (Button) findViewById(R.id.but_re);
+        but_register = (Button) findViewById(R.id.but_register);
         iv = (ImageView) findViewById(R.id.iv);
         tv = (TextView) findViewById(R.id.tv);
+
+        but_register.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final String Img_Path = "storage/emulated/0/Images/atm18.jpg";
+                Toast.makeText(MainActivity.this,"注册中...", Toast.LENGTH_SHORT).show();
+                tv.setText("注册中");
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        int r = RegisterTask.Register("lsl", Img_Path, 123);
+                    }
+                }).start();
+
+            }
+        });
+
 
         but0.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -77,7 +100,7 @@ public class MainActivity extends AppCompatActivity {
         public void run() {
 
             try {
-                socket = new Socket("192.168.1.100",54321);
+                socket = new Socket("192.168.1.101",54321);
 
                 DataOutputStream dos = new DataOutputStream(socket.getOutputStream());
                 Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.icon);
