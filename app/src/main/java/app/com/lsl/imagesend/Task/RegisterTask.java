@@ -20,15 +20,16 @@ import app.com.lsl.imagesend.base.Image64Base;
 
 public class RegisterTask {
 
-    public static final String IP = "192.168.1.101";
+    public static final String IP = "192.168.1.100";
     public static final int PORT = 54321;
     private static final String TYPE = "register";
 
-    public static int Register(String name, String Img_path, int psw) {
-        Log.e("RegisterTask:","name:" + name);
+    public static String Register(String name, String Img_path, int psw) {
+        Log.e("RegisterTask","name:" + name);
+
         // 将图片的信息转化为base64编码
         String imgStr = Image64Base.getImageStr(Img_path);
-        int isRegSuccess = 0;
+        String isRegSuccess = "register_failed";
         while (true){
             Socket socket = null;
             try {
@@ -57,7 +58,7 @@ public class RegisterTask {
                 ops.flush();
                 Log.e("RegisterTask", "传输数据完毕");
 
-                //socket.shutdownOutput();
+                socket.shutdownOutput();
 
 
                 // 读取服务器端数据    
@@ -66,12 +67,11 @@ public class RegisterTask {
                 input = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
                 strinput = input.readUTF();
                 Log.e("RegisterTask", "输入信息为："+ strinput);
-                JSONObject js = new JSONObject((Map) input);
+                JSONObject js = new JSONObject(strinput);
                 Log.e("RegisterTask", "" + js.get("isSuccess"));
-                isRegSuccess = Integer.parseInt((String)js.get("isSuccess"));
+                isRegSuccess = js.getString("isSuccess");
 
                 // 如接收到 "OK" 则断开连接  
-
 
                 if (js != null) {
                     Log.e("RegisterTask", "客户端将关闭连接");

@@ -46,16 +46,21 @@ public class MainActivity extends AppCompatActivity {
         but_register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final String Img_Path = "storage/emulated/0/Images/atm18.jpg";
-                Toast.makeText(MainActivity.this,"注册中...", Toast.LENGTH_SHORT).show();
-                tv.setText("注册中");
+                // 用户头像路径
+                final String Img_Path = "storage/emulated/0/Images/atm3.jpg";
+                tv.setText("注册中...");
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        int r = RegisterTask.Register("lsl", Img_Path, 123);
+                        String result = "";
+                        result = RegisterTask.Register("lsl", Img_Path, 123);
+                        // 显示注册结果
+                        Message message = new Message();
+                        message.obj = result;
+                        handler2.sendMessage(message);
                     }
                 }).start();
-
+                Toast.makeText(MainActivity.this,"注册中...", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -63,7 +68,9 @@ public class MainActivity extends AppCompatActivity {
         but0.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new Thread(networkTask).start();
+                Log.e("N","ddddddddddddddddddddddd");
+                Toast.makeText(MainActivity.this,"注册中ddddd...", Toast.LENGTH_SHORT).show();
+                // new Thread(networkTask).start();
             }
         });
 
@@ -80,6 +87,14 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
+    Handler handler2 = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            tv.setText("注册结果:" + msg.obj);
+        }
+    };
 
     Handler handler = new Handler() {
         @Override
